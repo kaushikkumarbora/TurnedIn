@@ -16,8 +16,8 @@ services:
   pgadmin-compose:
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: "test@gmail.com"
-      PGADMIN_DEFAULT_PASSWORD: "test123!"
+      PGADMIN_DEFAULT_EMAIL: "admin@netenrich.com"
+      PGADMIN_DEFAULT_PASSWORD: "k0yIdir0k@s"
     ports:
       - "16543:80"
     depends_on:
