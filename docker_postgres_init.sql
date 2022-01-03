@@ -1,54 +1,13 @@
-CREATE TABLE connection
-(
-    l_user bigint NOT NULL,
-    r_user bigint NOT NULL,
-    status "char" NOT NULL,
-    CONSTRAINT l_user_fkey FOREIGN KEY (l_user)
-        REFERENCES user (user_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT r_user_fkey FOREIGN KEY (r_user)
-        REFERENCES user (user_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
-
-CREATE TABLE course
-(
-    course_id bigint NOT NULL,
-    department_id bigint NOT NULL,
-    name text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT course_pkey PRIMARY KEY (course_id),
-    CONSTRAINT department_id_fkey FOREIGN KEY (department_id)
-        REFERENCES department (department_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
-
-CREATE TABLE department
-(
-    department_id bigint NOT NULL,
-    name text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT department_pkey PRIMARY KEY (department_id)
-)
-
-CREATE TABLE hostel
-(
-    hostel_id bigint NOT NULL,
-    name text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT hostel_pkey PRIMARY KEY (hostel_id)
-)
-
 CREATE TABLE por
 (
-    place_id bigint NOT NULL,
+    por_id bigint NOT NULL DEFAULT nextval('por_por_id_seq'::regclass),
     name text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT por_pkey PRIMARY KEY (place_id)
+    CONSTRAINT por_pkey PRIMARY KEY (por_id)
 )
 
-CREATE TABLE user
+CREATE TABLE public."user"
 (
-    user_id bigint NOT NULL,
+    user_id bigint NOT NULL DEFAULT nextval('user_user_id_seq'::regclass),
     first_name text COLLATE pg_catalog."default",
     last_name text COLLATE pg_catalog."default",
     dob date,
@@ -57,46 +16,50 @@ CREATE TABLE user
     skills text COLLATE pg_catalog."default",
     year_of_admission text COLLATE pg_catalog."default",
     year_of_completion text COLLATE pg_catalog."default",
-    department_id integer NOT NULL,
-    course_id integer NOT NULL,
-    curr_sem integer,
+    semester smallint,
     bio text COLLATE pg_catalog."default",
-    por_id bigint NOT NULL,
-    hostel_id bigint NOT NULL,
-    resume bytea,
-    status boolean NOT NULL,
+    por_id bigint,
     education text COLLATE pg_catalog."default",
+    department text COLLATE pg_catalog."default",
+    course text COLLATE pg_catalog."default",
+    hostel text COLLATE pg_catalog."default",
+    resume bytea,
+    status boolean,
+    username text COLLATE pg_catalog."default" NOT NULL,
+    password text COLLATE pg_catalog."default" NOT NULL,
+    internship text COLLATE pg_catalog."default",
     CONSTRAINT user_pkey PRIMARY KEY (user_id),
-    CONSTRAINT course_id_fkey FOREIGN KEY (course_id)
-        REFERENCES course (course_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT department_id_fkey FOREIGN KEY (department_id)
-        REFERENCES department (department_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT hostel_id_fkey FOREIGN KEY (hostel_id)
-        REFERENCES hostel (hostel_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
+    CONSTRAINT user_username_key UNIQUE (username),
     CONSTRAINT por_id_fkey FOREIGN KEY (por_id)
-        REFERENCES por (place_id) MATCH SIMPLE
+        REFERENCES por (por_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
 )
 
-CREATE TABLE internship
+CREATE TABLE connection
 (
-    internship_id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    about text COLLATE pg_catalog."default",
-    CONSTRAINT internship_pkey PRIMARY KEY (internship_id),
-    CONSTRAINT user_id_fkey FOREIGN KEY (user_id)
-        REFERENCES user (user_id) MATCH SIMPLE
+    l_user_id bigint NOT NULL,
+    r_user_id bigint NOT NULL,
+    status character(1) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT l_user_id FOREIGN KEY (l_user_id)
+        REFERENCES "user" (user_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT r_user_id FOREIGN KEY (r_user_id)
+        REFERENCES "user" (user_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
+
+INSERT INTO por (name) VALUES ('Charaideo'), ('Dhemaji'), ('Dibrugarh'), ('Golaghat'), ('Jorhat'), ('Lakhimpur'), ('Majuli Sivasagar'), ('Tinsukia');
+
+INSERT INTO "user" (first_name, last_name, dob, email_id, contact_no, skills, year_of_admission, year_of_completion, semester, bio, por_id, education, department, course, hostel, status, username, password, internship)
+VALUES ('Kaushik', 'Kumar Bora', '17-01-2001', 'kaushikkumarbora@gmail.com', '9999999999', 'C, C++, Golang', '2018', '2022', 7, 'Hey', (select por_id from por where name='Jorhat'), 'B.Tech, M.Tech, PhD', 'CSE', 'B.Tech', 'CMH', true, 'kaushik', 'kaushik123', 'blablabla'),
+('Aasurjya', 'Bikash Handique', '17-01-2001', 'ahandique8@gmail.com', '9999999999', 'C, C++, Golang', '2018', '2022', 7, 'Hey', (select por_id from por where name='Dibrugarh'), 'B.Tech, M.Tech, PhD', 'CSE', 'B.Tech', 'CMH', true, 'shivangshu', 'shivangshu123', 'blablabla'),
+('Mithuraj', 'Borgohain', '13-02-1997', 'mithuraj@gmail.com', '9999999999', 'C, C++, Golang', '2018', '2022', 7, 'Hey', (select por_id from por where name='Dhemaji'), 'B.Tech, M.Tech, PhD', 'FET', 'B.Tech', 'CMH', true, 'mithuraj', 'mithuraj123', 'blablabla');
+
+INSERT INTO connection (l_user_id, r_user_id, status)
+VALUES (1,2,'p'),
+(1,3,'a');
+

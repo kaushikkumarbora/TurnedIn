@@ -1,6 +1,7 @@
 package model
 
-type ConnectionRequest struct {
-	RequesterID   string `json:"reqid"`
-	RequesterName string `json:"reqname"`
+type Connection struct {
+	LUserID int64  `json:"l_user_id"`
+	RUserID int64  `json:"r_user_id"`
+	Status  string `json:"status"`
 }

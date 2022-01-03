@@ -2,6 +2,7 @@ package storage
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	config "github.com/kaushikkumarbora/TurnedIn/config"
@@ -21,6 +22,12 @@ func NewDB(params ...string) *sql.DB {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	pingErr := DB.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+	fmt.Println("Connected!")
 
 	return DB
 }

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/kaushikkumarbora/TurnedIn/controller"
+	"github.com/kaushikkumarbora/TurnedIn/model"
 	"github.com/kaushikkumarbora/TurnedIn/storage"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -16,23 +17,36 @@ func main() {
 	db := storage.NewDB()
 	defer db.Close()
 
+	//Group
+	r := e.Group("/u")
+	//Setup JWT Middleware
+	config := middleware.JWTConfig{
+		Claims:     &model.Auth{},
+		SigningKey: []byte("secret"),
+	}
+	r.Use(middleware.JWTWithConfig(config))
+
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
 	// Routes
 	e.GET("/", landing)
-	e.GET("/users", controller.GetUsers)
-	e.GET("/login", controller.GetUsers)
-	e.GET("/search", controller.GetUsers)
+	e.GET("/login", controller.Login)          //FORM DATA
+	r.GET("/name", controller.GetName)         //QUERY PARAM
+	r.GET("/", controller.GetUser)             //TOKEN
+	r.GET("/search", controller.GetUsers)      //QUERY PARAM
+	r.GET("/resume", controller.GetResume)     //TOKEN
+	r.GET("/requests", controller.GetRequests) //TOKEN
 
-	e.DELETE("/delete", controller.GetUsers)
+	r.DELETE("/delete", controller.DeleteUser) //TOKEN
 
-	e.PUT("/resume", controller.GetUsers)
+	r.PUT("/resume", controller.PutResume)        //FORM DATA
+	r.PUT("/update", controller.Update)           //FORM DATA
+	r.PUT("/accept", controller.AcceptConnection) //QUERY PARAM
 
-	e.POST("/connect", controller.GetUsers)
-	e.POST("/update", controller.GetUsers)
-	e.POST("/signup", controller.GetUsers)
+	r.POST("/connect", controller.SendConnection) //QUERY PARAM
+	e.POST("/signup", controller.Signup)          //FORM DATA
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))

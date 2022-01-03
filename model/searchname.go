@@ -1,5 +1,6 @@
 package model
 
-type SearchName struct {
-	Name string `json:"name"`
+type Name struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
 }
