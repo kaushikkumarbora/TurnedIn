@@ -1,11 +1,24 @@
-CREATE TABLE por
+-- Table: public.por
+
+-- DROP TABLE public.por;
+
+CREATE TABLE public.por
 (
     por_id bigint NOT NULL DEFAULT nextval('por_por_id_seq'::regclass),
     name text COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT por_pkey PRIMARY KEY (por_id)
 )
 
-CREATE TABLE "user"
+TABLESPACE pg_default;
+
+ALTER TABLE public.por
+    OWNER to postgres;
+
+-- Table: public.user
+
+-- DROP TABLE public."user";
+
+CREATE TABLE public."user"
 (
     user_id bigint NOT NULL DEFAULT nextval('user_user_id_seq'::regclass),
     first_name text COLLATE pg_catalog."default",
@@ -31,26 +44,40 @@ CREATE TABLE "user"
     CONSTRAINT user_pkey PRIMARY KEY (user_id),
     CONSTRAINT user_username_key UNIQUE (username),
     CONSTRAINT por_id_fkey FOREIGN KEY (por_id)
-        REFERENCES por (por_id) MATCH SIMPLE
+        REFERENCES public.por (por_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
 )
 
-CREATE TABLE connection
+TABLESPACE pg_default;
+
+ALTER TABLE public."user"
+    OWNER to postgres;
+
+-- Table: public.connection
+
+-- DROP TABLE public.connection;
+
+CREATE TABLE public.connection
 (
     l_user_id bigint NOT NULL,
     r_user_id bigint NOT NULL,
     status character(1) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT l_user_id FOREIGN KEY (l_user_id)
-        REFERENCES "user" (user_id) MATCH SIMPLE
+        REFERENCES public."user" (user_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT r_user_id FOREIGN KEY (r_user_id)
-        REFERENCES "user" (user_id) MATCH SIMPLE
+        REFERENCES public."user" (user_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.connection
+    OWNER to postgres;
 
 INSERT INTO por (name) VALUES ('Charaideo'), ('Dhemaji'), ('Dibrugarh'), ('Golaghat'), ('Jorhat'), ('Lakhimpur'), ('Majuli Sivasagar'), ('Tinsukia');
 
@@ -62,4 +89,3 @@ VALUES ('Kaushik', 'Kumar Bora', '17-01-2001', 'kaushikkumarbora@gmail.com', '99
 INSERT INTO connection (l_user_id, r_user_id, status)
 VALUES (1,2,'p'),
 (1,3,'a');
-

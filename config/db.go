@@ -3,9 +3,9 @@ package config
 import "fmt"
 
 const (
-	DBUser     = "postgres"
-	DBPassword = "kaushik"
-	DBName     = "turnedin"
+	DBUser     = "root"
+	DBPassword = "root"
+	DBName     = "root"
 	DBHost     = "0.0.0.0"
 	DBPort     = "5432"
 	DBType     = "postgres"
