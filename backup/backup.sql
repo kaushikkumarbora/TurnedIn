@@ -1,3 +1,6 @@
+CREATE SEQUENCE por_por_id_seq START 1;
+CREATE SEQUENCE user_user_id_seq START 1;
+
 -- Table: public.por
 
 -- DROP TABLE public.por;
